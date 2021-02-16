@@ -21,11 +21,11 @@
 
 const int Height = 1080;
 const int Width = 1920;
+const int ReflectDepLim = 40;
+const int RandomSamples = 50;
 const double AspectRatio = 1.0 * Width / Height;
 const int ColorDepth = 8;
 const int ColorLim = (1 << ColorDepth) - 1;
-const int ReflectDepLim = 40;
-const int RandomSamples = 50;
 const double Gamma = 2;
 const double EPS = 1e-8;
 const double INF = 1e14;

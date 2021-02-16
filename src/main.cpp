@@ -21,7 +21,7 @@ RGBcolor ray_color(const Ray &r, const HittableList &objs, int depth = 0) {
       const auto refl = scattered.value();
 
       const auto [r0, g0, b0] = ray_color(refl, objs, depth + 1).as_tuple();
-      const auto [r1, g1, b1] = rec.material()->absorb().as_tuple();
+      const auto [r1, g1, b1] = rec.material()->albedo().as_tuple();
       return RGBcolor{r0 * r1, g0 * g1, b0 * b1};
     } else { // totally absorbed
       return RGBcolor{0, 0, 0};
@@ -47,7 +47,7 @@ void render_row(const Camera &cam, const HittableList &objs, int y,
     color = gamma_corr(color);
     output[x] = color;
   }
-  std::cerr << "finished row " << y << "\n";
+  std::cerr << "finished row "+std::to_string(y)+"\n";
 }
 void output() {
   std::cout << "P3\n" << Width << ' ' << Height << "\n255\n";
@@ -128,11 +128,9 @@ int main() {
   std::ios::sync_with_stdio(0);
 
   const auto objs = random_scene();
-  const auto cam = Camera{Point3D{13, 2, 3}, Point3D{0, 0, 0}, Vec3D{0, 1, 0},
-                          PI / 2, AspectRatio};
+  const auto cam = Camera{Point3D{13, 2, 3}, Point3D{0, 0, 0}, Vec3D{0, 1, 0}, PI / 2, AspectRatio};
   // const auto objs = test_sceen();
-  // const auto cam = Camera{Point3D{-2, 2, 1}, Point3D{0, 0, -1}, Vec3D{0, 1,
-  // 0}, PI/5, AspectRatio};
+  // const auto cam = Camera{Point3D{-2, 2, 1}, Point3D{0, 0, -1}, Vec3D{0, 1, 0}, PI/5, AspectRatio};
 
 #ifndef EXEC_POLICE_SERIAL
   auto pool = ThreadPool{};

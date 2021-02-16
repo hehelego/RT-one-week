@@ -15,18 +15,18 @@ std::optional<Ray> Diffuse::scatter(const Ray &ray,
   assert(dir.valid());
   return Ray{rec.point(), dir};
 }
-RGBcolor Diffuse::absorb() const { return this->albedo; }
+RGBcolor Diffuse::albedo() const { return alb; }
 std::string Diffuse::name() const { return "diffuse"; }
 
 std::optional<Ray> Metal::scatter(const Ray &ray, const HitRecord &rec) const {
   auto norm = rec.norm_vec().normalize();
   auto k = -dot(ray.dir(), norm);
   auto refl = ray.dir() + 2.0 * k * norm;
-  auto fuzz_delta = +this->fuzz * Vec3D::rand_us();
-  assert((refl + fuzz_delta).valid());
-  return Ray{rec.point(), refl + fuzz_delta};
+  auto fuzz_offset = f * Vec3D::rand_us();
+  assert((refl + fuzz_offset).valid());
+  return Ray{rec.point(), refl + fuzz_offset};
 }
-RGBcolor Metal::absorb() const { return this->albedo; }
+RGBcolor Metal::albedo() const { return alb; }
 std::string Metal::name() const { return "metal"; }
 
 std::optional<Ray> Dielectric::scatter(const Ray &ray,
@@ -59,7 +59,7 @@ std::optional<Ray> Dielectric::scatter(const Ray &ray,
   assert((vin + norm * k).valid());
   return Ray{rec.point(), vin + norm * k};
 }
-RGBcolor Dielectric::absorb() const { return this->albedo; }
+RGBcolor Dielectric::albedo() const { return alb; }
 std::string Dielectric::name() const { return "dielectric"; }
 
 } // namespace Materials
